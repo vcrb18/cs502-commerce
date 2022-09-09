@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h1>Create New Auction</h1>
+    <form action="{% url 'add' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ listing_form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+    <p>Click the "Submit" button and a new auction for the commerce will be created</p>
+
+{% endblock %}

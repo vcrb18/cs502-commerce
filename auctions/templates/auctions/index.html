@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for auction in listings %}
+        <div class="w-50 p-6">
+            <div class="card mb-3">
+                <!-- {% load static %} <img class="card-img-top" src="{% static "auctions/media/bycicle.jpg" %}"  alt="blue bycicle" /> -->
+                <img class="card-img-top" src="{{ auction.image }}"" alt="blue bycicle" />
+                <div class="card-body">
+                    <a href="{% url 'listing_details' auction.id %}">{{ auction.title }}</a>
+                    <!-- <h4 class="card-title">{{ auction.title }}</h4> -->
+                    <h6 class="card-title">Price: ${{ auction.price }}</h6>
+                    <p class="card-text"><small class="text-muted">{{ auction.date }}</small></p>
+                </div>
+            </div>
+        </div>
+            {% endfor %}
+    </div>
+
+
+
+    <!-- {% for auction in listings %}
+        <ul>
+            <li>{{ auction.title }}</li>
+            <li>
+                {% load static %} <img src="{% static "auctions/media/bycicle.jpg" %}" width="500" height="300" alt="blue bycicle" />
+            </li>
+            <li>{{ auction.description }}</li>
+            <li>{{ auction.price }}</li>
+        </ul>
+
+        <div class="listing">
+            <h3>Listing: {{ auction.title }}</h3>
+            {% load static %} <img src="{% static "auctions/media/bycicle.jpg" %}" width="500" height="300" alt="blue bycicle" />
+            {{ auction.description }}
+        </div>
+    {% endfor %} -->
+{% endblock %}

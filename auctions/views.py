@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .models import Bid, User, Auction, Bids
+from .models import Bid, User, Auction
 
 
 # class WatchlistForm(forms.ModelForm):
@@ -145,16 +145,32 @@ def remove_from_watchlist(request, listing_id):
     request.user.save()
     return HttpResponseRedirect(reverse('listing_details', args=(auction.id,)))
 
+# Debe ser mayor al inicial y mayor a cualquier bid anterior
 @login_required(login_url='auctions/login.html')
-def bid(request, id):
-    auction = get_object_or_404(Auction, id=id)
-    if request.method == "POST":
-        bid_price_form = BidForm(request.POST)
-        if bid_price_form.is_valid():
-            if bid_price_form > get_object_or_404(Bid, id=id).price:
-                bid = get_object_or_404(Bid, id=id)
-                bid.price, bid.user = bid_price_form, request.user
-                bid.save()
-                auction.save()
-                return HttpResponseRedirect(reverse('index'))
-    return HttpResponseRedirect(reverse('listing_details', args=(id,)))
+def bid(request, listing_id):
+    # auction = get_object_or_404(Auction, id=id)
+    new_price = request.POST['bid']
+    if new_price:
+        auction = get_object_or_404(Auction, id=listing_id)
+        if int(new_price) > auction.price:
+            bid = Bid(price=new_price, user=request.user, auction=auction)
+            bid.save()
+            auction.price = new_price
+            auction.save()
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            raise ValidationError('Bid must be greater than current auction price')
+    else:
+            raise ValidationError('Bid must be greater than current auction price')
+    
+
+    # if request.method == "POST":
+    #    #bid_price_form = BidForm(request.POST)
+    #     if bid_price_form.is_valid():
+    #         if bid_price_form > get_object_or_404(Bid, id=id).price:
+    #             bid = Bid(price=bid_price_form, user=request.user, auction=auction)
+    #             bid.save()
+    #             # bid = get_object_or_404(Bid, id=id)
+    #             # auction.save()
+    #             return HttpResponseRedirect(reverse('index'))
+    # return HttpResponseRedirect(reverse('listing_details', args=(id,)))

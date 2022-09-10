@@ -35,7 +35,7 @@ class ListingForm(forms.ModelForm):
 
     class Meta:
         model = Auction
-        fields = ['title', 'description', 'category', 'image', 'starting_bid']
+        fields = ['user', 'title', 'description', 'category', 'image', 'starting_bid']
 
 def index(request):
     return render(request, "auctions/index.html", {
@@ -163,14 +163,9 @@ def bid(request, listing_id):
     else:
             raise ValidationError('Bid must be greater than current auction price')
     
-
-    # if request.method == "POST":
-    #    #bid_price_form = BidForm(request.POST)
-    #     if bid_price_form.is_valid():
-    #         if bid_price_form > get_object_or_404(Bid, id=id).price:
-    #             bid = Bid(price=bid_price_form, user=request.user, auction=auction)
-    #             bid.save()
-    #             # bid = get_object_or_404(Bid, id=id)
-    #             # auction.save()
-    #             return HttpResponseRedirect(reverse('index'))
-    # return HttpResponseRedirect(reverse('listing_details', args=(id,)))
+def close(request, listing_id):
+    auction = get_object_or_404(Auction, id=listing_id)
+    auction.active = False
+    auction.winner = request.user.username
+    auction.save()
+    return HttpResponseRedirect(reverse('index'))

@@ -28,6 +28,8 @@ class Auction(models.Model):
         max_length=3,
         choices=CATEGORIES
     )
+    active = models.BooleanField(default=True)
+    winner = models.CharField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.price:

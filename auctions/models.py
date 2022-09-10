@@ -45,10 +45,12 @@ class Bid(models.Model):
     price = models.IntegerField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now=True)
     
 
     def __str__(self):
-        return f"{self.price}"
+        return f"{self.price} on {self.auction} by {self.user.username}"
+
 
 
 

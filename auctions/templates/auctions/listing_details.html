@@ -23,11 +23,13 @@ asd
         </form>
     {% endif %}
 
-    <form action="{% url 'bid' bid.id %}" method="post">
+    <form action="{% url 'bid' listing.id %}" method="post">
         {% csrf_token %}
-        <input type="submit" class="btn btn-outline-info" value="Place bid">
+        <div class="input-group-prepend">
+            <button class="btn btn-outline-secondary bg-info text-light" type="submit">Bid Now!</button>
+        </div>
+        <input required type="number" min="{{ listing.price }}"  class="form-control" name="bid" placeholder="Actual Bid: ${{ listing.price }}">
     </form>
-    <button type="button" class="btn btn-primary">Place bid</button>
 
 
 {% endblock %} 
